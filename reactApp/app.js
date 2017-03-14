@@ -32,6 +32,7 @@ var Search = React.createClass({
         <input type='text' value={this.state.specificQuery} onChange={this.updateSpecificQuery} placeholder='Specific Search Query'/>
         <input type = 'submit' value = 'Submit'/>
         </form>
+
       </div>
     )
   }
