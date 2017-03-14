@@ -25017,7 +25017,7 @@ exports = module.exports = __webpack_require__(91)(undefined);
 
 
 // module
-exports.push([module.i, "body {\n  font:\"Century Gothic\", Futura, sans-serif;\n  margin: 20px;\n  display: flex;\n  align-items: center;\n  justify-content: center\n}\nol, ul {\n  padding-left: 30px;\n}\n.board-row:after {\n  clear: both;\n  content: \"\";\n  display: table;\n}\n.status {\n  margin-bottom: 10px;\n}\n.square {\n  background: #fff;\n  border: 1px solid #999;\n  float: left;\n  font-size: 24px;\n  font-weight: bold;\n  line-height: 34px;\n  height: 34px;\n  margin-right: -1px;\n  margin-top: -1px;\n  padding: 0;\n  text-align: center;\n  width: 34px;\n}\n.square:focus {\n  outline: none;\n}\n.kbd-navigation .square:focus {\n  background: #ddd;\n}\n.game {\n  display: flex;\n  flex-direction: row;\n}\n.game-info {\n  margin-left: 20px;\n}\n", ""]);
+exports.push([module.i, "body {\r\n  font:\"Century Gothic\", Futura, sans-serif;\r\n  margin: 20px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center\r\n}\r\nol, ul {\r\n  padding-left: 30px;\r\n}\r\n.board-row:after {\r\n  clear: both;\r\n  content: \"\";\r\n  display: table;\r\n}\r\n.status {\r\n  margin-bottom: 10px;\r\n}\r\n.square {\r\n  background: #fff;\r\n  border: 1px solid #999;\r\n  float: left;\r\n  font-size: 24px;\r\n  font-weight: bold;\r\n  line-height: 34px;\r\n  height: 34px;\r\n  margin-right: -1px;\r\n  margin-top: -1px;\r\n  padding: 0;\r\n  text-align: center;\r\n  width: 34px;\r\n}\r\n.square:focus {\r\n  outline: none;\r\n}\r\n.kbd-navigation .square:focus {\r\n  background: #ddd;\r\n}\r\n.game {\r\n  display: flex;\r\n  flex-direction: row;\r\n}\r\n.game-info {\r\n  margin-left: 20px;\r\n}\r\n", ""]);
 
 // exports
 
@@ -25286,14 +25286,27 @@ var Redux = __webpack_require__(87);
 var ReactDOM = __webpack_require__(85);
 var styles = __webpack_require__(88);
 
+var SendingData = React.createClass({
+  displayName: 'SendingData',
+  render: function render() {
+    return React.createElement(
+      'div',
+      null,
+      'Sending Data to Video Classifier'
+    );
+  }
+});
+
 var Search = React.createClass({
   displayName: 'Search',
   getInitialState: function getInitialState() {
     return {
       generalQuery: '',
-      specificQuery: ''
+      specificQuery: '',
+      showProgress: false
     };
   },
+  componentDidRender: function componentDidRender() {},
   updateGeneralQuery: function updateGeneralQuery(event) {
     this.setState({
       generalQuery: event.target.value
@@ -25304,7 +25317,13 @@ var Search = React.createClass({
       specificQuery: event.target.value
     });
   },
-  handleSubmit: function handleSubmit() {},
+  handleSubmit: function handleSubmit(event) {
+    event.preventDefault();
+    console.log('here');
+    this.setState({
+      showProgress: true
+    });
+  },
   render: function render() {
     return React.createElement(
       'div',
@@ -25320,6 +25339,15 @@ var Search = React.createClass({
         React.createElement('input', { type: 'text', value: this.state.generalQuery, onChange: this.updateGeneralQuery, placeholder: 'General Search Query' }),
         React.createElement('input', { type: 'text', value: this.state.specificQuery, onChange: this.updateSpecificQuery, placeholder: 'Specific Search Query' }),
         React.createElement('input', { type: 'submit', value: 'Submit' })
+      ),
+      React.createElement(
+        'div',
+        null,
+        this.state.showProgress ? React.createElement(SendingData, null) : React.createElement(
+          'div',
+          null,
+          'Pick Video Query to Send to Classifier'
+        )
       )
     );
   }
