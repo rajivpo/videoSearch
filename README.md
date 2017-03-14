@@ -1,2 +1,2 @@
 # videoSearch
-This shit is automatic supersoni hypnotic funky fresh AAHHHH
+A platform for finding doges in video
