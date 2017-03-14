@@ -1,29 +1,44 @@
 var React = require('react');
 var Redux = require('redux');
 var ReactDOM = require('react-dom');
+var styles = require('../styles.css')
+
+var Search = React.createClass({
+  getInitialState(){
+    return{
+      generalQuery: '',
+      specificQuery: ''
+    }
+  },
+  updateGeneralQuery(event){
+    this.setState({
+      generalQuery: event.target.value
+    })
+  },
+  updateSpecificQuery(event){
+    this.setState({
+      specificQuery: event.target.value
+    })
+  },
+  handleSubmit(){
+
+  },
+  render(){
+    return (
+      <div>
+        <h1>Search!</h1>
+        <form onSubmit = {this.handleSubmit}>
+        <input type='text' value={this.state.generalQuery} onChange={this.updateGeneralQuery} placeholder='General Search Query'/>
+        <input type='text' value={this.state.specificQuery} onChange={this.updateSpecificQuery} placeholder='Specific Search Query'/>
+        <input type = 'submit' value = 'Submit'/>
+        </form>
+      </div>
+    )
+  }
+})
 
 
 ReactDOM.render(
-  <Game />, //change name to whatever frontend react is called
+  <Search />,
   document.getElementById('root')
 );
-
-function calculateWinner(squares) {
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
-    }
-  }
-  return null;
-}
