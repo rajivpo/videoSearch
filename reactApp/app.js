@@ -4,55 +4,79 @@ var ReactDOM = require('react-dom');
 var styles = require('../styles.css')
 
 var SendingData = React.createClass({
-  componentDidMount(){
-    //this code is likely all wrong and untested
-    var i = 0;
-    var video = document.createElement("video");
-    var thumbs = document.getElementById("thumbs");
+  parseVideo(evt){
+    evt.preventDefault();
 
-    video.addEventListener('loadeddata', function() {
-      thumbs.innerHTML = "";
-      video.currentTime = i;
-    }, false);
+    var file = $('#my-input').prop('files')[0]
+    console.log('our file', file)
 
-    video.addEventListener('seeked', function() {
-      // now video has seeked and current frames will show
-      // at the time as we expect
-      generateThumbnail(i);
-      i++;// when frame is captured, increase
-      if (i <= video.duration) { // if we are not passed end, seek to next interval
-        // this will trigger another seeked event
+    //we are iterating through each second, seeking the next second once our frame is saved as thumbnail
+    //for each new frame we use canvas to draw it and save it inside thumbs
+    var createThumbnails = function () {
+      var i = 0;
+      var video = document.createElement("video");
+      var thumbs = document.getElementById("thumbs");
+
+      video.addEventListener('loadeddata', function() { //when a frame has loaded (before the next has) it
+        console.log("this should appear once");
+        thumbs.innerHTML = "";
         video.currentTime = i;
-      }
-      else {
-        // DONE!, next action
-        alert("done!")
-      }
+      }, false); //runs after video.preload runs
 
+      video.addEventListener('seeked', function() {
+        // now video has seeked and current frames will show
+        // at the time as we expect
+        generateThumbnail();
+        i++; // when frame is captured, increase
+        if (i <= video.duration) { // if we are not passed end, seek to next interval
+          // this will trigger another seeked event
+          video.currentTime = i;
+        } else {
+          alert("done!") //each second of the video has a frame captured
+        }
+      }, false);
+
+      video.preload = "auto"; //begins loading video early on
+      video.src = source; //for uploaded files, maybe this doesn't work
+      //through iframe api or from video upload
+
+      function generateThumbnail() { //we use canvas and append a child canvas to thumbs
+        //so inside thumbs are the canvas children
+        var c = document.createElement("canvas");
+        console.log(3)
+        var ctx = c.getContext("2d"); //sets 2d convas of c.width and c.height to ctx.drawImage (built-in) on
+        c.width = 160;
+        c.height = 90;
+        ctx.drawImage(video, 0, 0, 160, 90);
+        thumbs.appendChild(c);  //we add our created image into thumbs, instead we can get rbg array for
+        //each pixel and send that to a server
+      }
+    };
+
+    //process uploaded file to execute creation of thumbnails correctly
+    var source = ''
+    var reader  = new FileReader();
+    reader.addEventListener("load", function () {
+      source = reader.result;
+      console.log(2)
+      createThumbnails();
     }, false);
-
-    video.preload = "auto";
-    video.src = "https://media.w3.org/2010/05/sintel/trailer.mp4";
-
-    function generateThumbnail() {
-      var c = document.createElement("canvas");
-      var ctx = c.getContext("2d");
-      c.width = 160;
-      c.height = 90;
-      ctx.drawImage(video, 0, 0, 160, 90);
-      thumbs.appendChild(c);
+    if (file) {
+      reader.readAsDataURL(file);
+      console.log(1)
     }
   },
   render(){
     return (
       <div>
-        <div>Sending Data to Video Classifier</div>
-        <video width="320" height="240" controls>
-          <source src="../video.mp4" type='video/mp4' /> //this is for a local source not an html link but lmao
-          Your browser does not support the video tag.
-        </video>
-        <div id="thumb">
+        <div>
+          <form onSubmit={this.parseVideo}>
+            <input id="my-input" type="file" name="myfile" ref="myfile" />
+            <input type="submit" />
+          </form>
         </div>
+        <div>Sending Data to Video Classifier</div>
+        <div id="thumbs" />
       </div>
     )
   }
@@ -63,7 +87,7 @@ var Search = React.createClass({
     return{
       generalQuery: '',
       specificQuery: '',
-      showProgress: false //will be changed to default false later so it conditionally renders whatver urls we pull
+      showProgress: true //will be changed to default false later so it conditionally renders whatver urls we pull
     }
   },
   updateGeneralQuery(event){
