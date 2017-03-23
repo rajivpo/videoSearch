@@ -34,7 +34,7 @@ app.get('/', function(req,res){
 });
 //9-15 here
 app.post('/python', function(req,res){
-  console.log("req.body", req.body)
+  console.log("python req.body", req.body)
   //path is node built in we use  to join these names (like + I think)
 });
 
@@ -49,12 +49,10 @@ app.get('/gameinfo', function(req, res){
   })
 })
 
-app.post('/uploadurl', function(req,res){
-  console.log('req.body', req.body)
-})
 
 //Steps 10,11, 12,13, 14, 15 //get rid of 10 and 11
-app.get('/predict', function(req, res){
+app.post('/predict', function(req, res){
+  console.log('predict req.body',req.body)
   var allKeys = [];
   var predictions = [];
   s3.listObjects({Bucket: 'INSERT_BUCKETNAME_HERE'}, function(err, data){
@@ -102,7 +100,7 @@ app.get('/predict', function(req, res){
 
 app.post('/uploadurl', function(req, res){
   // var source = req.body.url //this doesn't work yet
-  var source =
+  var source = req.body.url
   console.log('source',source)
   var options = {
     // host: 'whatever the fuck heroku is called',
@@ -127,6 +125,7 @@ app.post('/uploadurl', function(req, res){
   });
   httpreq.write(source);
   httpreq.end();
+  console.log('here')
   res.redirect('/')
 })
 

@@ -24183,7 +24183,7 @@ exports = module.exports = __webpack_require__(85)(undefined);
 
 
 // module
-exports.push([module.i, "body {\n  font-family: \"Helvetica Neue\",Helvetica,Arial,sans-serif;\n  color: #747b80;\n  display: flex;\n  justify-content: center;\n}\np{\n  margin-bottom: 10px;\n  font-size: 14px;\n}\n\nh1{\n  font-size: 36px;\n  letter-spacing: 0.5px;\n  margin-bottom: 20px;\n  line-height: 1.25;\n  font-weight: 300;\n  color: #1D2A33;\n}\n\n.styles__cool___2Ae21{\n  width: 100%;\n  padding: 8px 0;\n  text-indent: 2%;\n  text-align: left;\n  border-radius: 3px;\n  border: 1px solid #ABB0B2;\n  height: 36px;\n}\n", ""]);
+exports.push([module.i, "body {\r\n  font-family: \"Helvetica Neue\",Helvetica,Arial,sans-serif;\r\n  color: #747b80;\r\n  display: flex;\r\n  justify-content: center;\r\n}\r\np{\r\n  margin-bottom: 10px;\r\n  font-size: 14px;\r\n}\r\n\r\nh1{\r\n  font-size: 36px;\r\n  letter-spacing: 0.5px;\r\n  margin-bottom: 20px;\r\n  line-height: 1.25;\r\n  font-weight: 300;\r\n  color: #1D2A33;\r\n}\r\n\r\n.styles__cool___2Ae21{\r\n  width: 100%;\r\n  padding: 8px 0;\r\n  text-indent: 2%;\r\n  text-align: left;\r\n  border-radius: 3px;\r\n  border: 1px solid #ABB0B2;\r\n  height: 36px;\r\n}\r\n", ""]);
 
 // exports
 exports.locals = {
@@ -24527,7 +24527,7 @@ var Main = function (_React$Component) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          url: 'https://s3-us-west-1.amazonaws.com/videosearch-assets/2a7a8fed-8eb0-407e-880a-5ec43fc82932_testing4.mp4'
+          url: 'https://s3-us-west-1.amazonaws.com/videosearch-assets/2716116f-ff91-461e-888f-54fe76230edb_blitzcrank.mp4'
         })
       }).catch(function (err) {
         console.log(err);
