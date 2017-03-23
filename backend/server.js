@@ -101,8 +101,9 @@ app.get('/predict', function(req, res){
 })
 
 app.post('/uploadurl', function(req, res){
-  var source = req.body.url
-  console.log(source)
+  // var source = req.body.url //this doesn't work yet
+  var source =
+  console.log('source',source)
   var options = {
     // host: 'whatever the fuck heroku is called',
     port: 8080,
