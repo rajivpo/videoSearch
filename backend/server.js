@@ -32,37 +32,27 @@ app.get('/', function(req,res){
   res.sendFile(path.join(__dirname, '../index.html'))
   //path is node built in we use  to join these names (like + I think)
 });
-//9-15 here
-app.post('/python', function(req,res){
-  console.log("req.body", req.body)
-  //path is node built in we use  to join these names (like + I think)
-});
 
 //Steps 17,18, 19
 app.get('/gameinfo', function(req, res){
-  Game.find(function(err, character){
+  Game.find(function(err, data){
     if(err){
       console.log('Error', err);
     } else{
-      res.json(character[0])
+      res.json(data[data.length-1]);
     }
   })
 })
-//Steps 10,11, 12,13, 14, 15 //get rid of 10 and 11
-app.get('/predict', function(req, res){
-  var allKeys = [];
+//Steps 9-15
+app.post('/predict', function(req, res){
+  var allKeys = req.body.source;
   var predictions = [];
-  s3.listObjects({Bucket: 'INSERT_BUCKETNAME_HERE'}, function(err, data){
-    data.Contents.forEach((item) => {
-      allKeys.push(item.Key)
-    })
-    allKeys.shift()
     var idx = 0
     var input = setInterval(function(){
       if(idx === allKeys.length - 1){
         clearInterval(input)
       }
-      clari.models.predict(Clarifai.GENERAL_MODEL, 'https://s3.amazonaws.com/horizonsvideosearch/uploads/' + allKeys[idx] + '.jpg').then(
+      clari.models.predict(Clarifai.GENERAL_MODEL, allKeys[idx]).then(
         function(response) {
           predictions.push(response.outputs[0].data.concepts[0]);
         },
@@ -72,18 +62,18 @@ app.get('/predict', function(req, res){
       );
       idx++;
     },100)
-  })
+
   var probability = 0;
   predictions.forEach(function(item){
     probability += item.value;
   })
   probability /= predictions.length;
-  var name = 'an unidentifiable character';
-  if(probability > 95){
+  var character = 'an unidentifiable character';
+  if(probability > .95){
     character = 'Blitzcrank';
   }
   var gamedata = Game({
-    character: 'Blitzcrank',
+    character: character,
     probability: probability
   })
   gamedata.save(function(err){
@@ -93,6 +83,7 @@ app.get('/predict', function(req, res){
       console.log('Data was saved')
     }
   })
+  res.redirect('/')
 })
 
 app.post('/uploadurl', function(req, res){

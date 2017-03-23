@@ -24483,6 +24483,7 @@ var Main = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (Main.__proto__ || Object.getPrototypeOf(Main)).call(this));
 
+    _this.getResult = _this.getResult.bind(_this);
     _this.state = {
       character: '',
       probability: 0
@@ -24493,16 +24494,18 @@ var Main = function (_React$Component) {
   _createClass(Main, [{
     key: 'getResult',
     value: function getResult(evt) {
-      var _this2 = this;
-
+      evt.preventDefault();
+      var self = this;
       evt.preventDefault();
       fetch('http://localhost:3000/gameinfo').then(function (response) {
         return response.json();
       }).then(function (responseJson) {
-        _this2.setState({
+        self.setState({
           character: responseJson.character,
           probability: responseJson.probability
         });
+      }).catch(function (err) {
+        console.log(err);
       });
     }
   }, {
@@ -24514,7 +24517,7 @@ var Main = function (_React$Component) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          url: 'https://s3-us-west-1.amazonaws.com/videosearch-assets/2a7a8fed-8eb0-407e-880a-5ec43fc82932_testing4.mp4'
+          url: 'https://s3-us-west-1.amazonaws.com/videosearch-assets/2716116f-ff91-461e-888f-54fe76230edb_blitzcrank.mp4'
         })
       }).catch(function (err) {
         console.log(err);
@@ -24526,9 +24529,9 @@ var Main = function (_React$Component) {
       var _React$createElement;
 
       var gameInfo = '';
-      if (this.state.character.length > 0 && this.state.character === 'Blitzcrank' && this.state.probability > 0) {
-        gameInfo = 'We are ' + this.state.probability + '% confident that you are playing ' + this.state.character;
-      } else if (this.state.character === 'unidentifiable character') {
+      if (this.state.character === 'Blitzcrank' && this.state.probability > 0) {
+        gameInfo = 'We are ' + this.state.probability * 100 + '% confident that you are playing ' + this.state.character;
+      } else if (this.state.character === 'an unidentifiable character') {
         gameInfo = 'We are unable to confidently identify the character you are playing. Our best guess is that you are playing Blitzcrank (' + this.state.probability + '%)';
       }
       return _react2.default.createElement(
