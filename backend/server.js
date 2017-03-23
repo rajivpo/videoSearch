@@ -100,7 +100,34 @@ app.get('/predict', function(req, res){
   })
 })
 
-
+app.post('/uploadurl', function(req, res){
+  var source = req.body.url
+  console.log(source)
+  var options = {
+    // host: 'whatever the fuck heroku is called',
+    port: 8080,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': Buffer.byteLength(source)
+    }
+  };
+  var httpreq = http.request(options, function (response) {
+    response.setEncoding('utf8');
+    response.on('data', function (chunk) {
+      console.log("body: " + chunk);
+    }).on('error', function(err) {
+      res.send('error');
+    }).on('end', function() {
+      res.send('ok');
+    })
+  }).on('error', function(e){
+    console.log(e)
+  });
+  httpreq.write(source);
+  httpreq.end();
+  res.redirect('/')
+})
 
 app.use('/s3', require('react-s3-uploader/s3router')({
     bucket: "videosearch-assets",
@@ -109,30 +136,7 @@ app.use('/s3', require('react-s3-uploader/s3router')({
     headers: {'Access-Control-Allow-Origin': '*'}, // optional
     ACL: 'private'
   })
-// var options = {
-//   // host: 'whatever the fuck heroku is called',
-//   port: 8080,
-//   method: 'POST',
-//   headers: {
-//     'Content-Type': 'application/x-www-form-urlencoded',
-//     'Content-Length': Buffer.byteLength(source)
-//   }
-// };
-// var httpreq = http.request(options, function (response) {
-//   response.setEncoding('utf8');
-//   response.on('data', function (chunk) {
-//     console.log("body: " + chunk);
-//   }).on('error', function(err) {
-//     res.send('error');
-//   }).on('end', function() {
-//     res.send('ok');
-//   })
-// }).on('error', function(e){
-//   console.log(e)
-// });
-// httpreq.write(source);
-// httpreq.end();
-// res.redirect('/')
+//
 );
 
 app.listen(3000, function () {
