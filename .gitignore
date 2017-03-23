@@ -1,2 +1,5 @@
 node_modules/
-video.mp4
+bodyparser.js
+.bashrc
+config.json
+env.sh

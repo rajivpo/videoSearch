@@ -25285,14 +25285,159 @@ var React = __webpack_require__(86);
 var Redux = __webpack_require__(87);
 var ReactDOM = __webpack_require__(85);
 var styles = __webpack_require__(88);
+// var aws = require('aws-sdk')
+//
+// aws.config.loadFromPath('backend/config.json')
+// var s3Bucket = new aws.S3( {params: {Bucket: 'videosearch-assets'}  } )
+
 
 var SendingData = React.createClass({
   displayName: 'SendingData',
+  parseVideo: function parseVideo(evt) {
+    evt.preventDefault();
+
+    var file = $('#browserUpload').prop('files')[0];
+    console.log('our file', file);
+
+    //we are iterating through each second, seeking the next second once our frame is saved as thumbnail
+    //for each new frame we use canvas to draw it and save it inside thumbs
+    var createThumbnails = function createThumbnails() {
+      var i = 4;
+      var video = document.createElement("video");
+      var thumbs = document.getElementById("thumbs");
+
+      video.addEventListener('loadeddata', function () {
+        //when a frame has loaded (before the next has) it
+        console.log("Loaded the Video,", video.duration, "seconds long");
+        thumbs.innerHTML = "";
+        video.currentTime = i;
+        generateThumbnail();
+      }, false); //runs after video.preload runs
+
+
+      video.preload = "auto"; //begins loading video early on
+      video.src = source; //for uploaded files, maybe this doesn't work
+
+      //through iframe api or from video upload
+      function generateThumbnail() {
+        //we use canvas and append a child canvas to thumbs
+        //so inside thumbs are the canvas children
+        var c = document.createElement("canvas");
+        var ctx = c.getContext("2d"); //sets 2d convas of c.width and c.height to ctx.drawImage (built-in) on
+        c.width = 160;
+        c.height = 90;
+        ctx.drawImage(video, 0, 0, 160, 90);
+
+        // var img = new Image();
+        // img.src = c.toDataURL();
+
+
+        // var data = {
+        //   Key: 'frameN',
+        //   Body: bodystream,
+        //   ContentEncoding: 'base64',
+        //   ContentType: 'image/png'
+        // }
+        //
+        // s3Bucket.putObject(data, function (err,data) {
+        //   if(err){
+        //     console.log("err", err);
+        //   } else {
+        //     console.log('successfully uploaded')
+        //   }
+        // })
+
+        // thumbs.appendChild(img);
+        thumbs.appendChild(c); //we add our created image into thumbs, instead we can get rbg array for
+        //each pixel and send that to a server
+        i = i + 4; // when frame is captured, increase
+
+        if (i <= video.duration) {
+          // if we are not passed end, seek to next interval
+          // this will trigger another seeked event
+          video.currentTime = i;
+          console.log('currentTime', video.currentTime);
+          generateThumbnail();
+        } else {
+          alert("done!"); //each second of the video has a frame captured
+        }
+      }
+    };
+
+    //process uploaded file to execute creation of thumbnails correctly
+    var source = '';
+    var reader = new FileReader();
+    reader.addEventListener("load", function () {
+      source = reader.result;
+      console.log(2);
+      createThumbnails();
+    }, false);
+    if (file) {
+      reader.readAsDataURL(file);
+      console.log(1);
+    }
+  },
+  serverUpload: function serverUpload(evt) {
+    // evt.preventDefault();
+    //
+    //
+    // var file = $('#serverUpload').prop('files')[0]
+    // console.log('filee: ',file)
+    // var source = ''
+    // var reader  = new FileReader();
+    //
+    //
+    // reader.addEventListener("load", function () {
+    //   source = reader.result;
+    //   var payload = {
+    //     file: file
+    //   };
+    //   var data = JSON.stringify(payload)
+    //   console.log('source found')
+    //   fetch("/serverupload", {
+    //     method: "POST",
+    //     headers: {
+    //       'Accept': 'application/json, text/plain, */*',
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: data
+    //   }).then((resp) => resp.json()).then(console.log).catch
+    // }, false);
+    //
+    // if (file) {
+    //   reader.readAsDataURL(file);
+    //   console.log(1)
+    // }
+  },
   render: function render() {
     return React.createElement(
       'div',
       null,
-      'Sending Data to Video Classifier'
+      React.createElement(
+        'div',
+        null,
+        React.createElement(
+          'form',
+          { onSubmit: this.parseVideo },
+          React.createElement('input', { id: 'browserUpload', type: 'file', name: 'browserUpload' }),
+          React.createElement('input', { type: 'submit'
+          })
+        ),
+        React.createElement(
+          'form',
+          { action: 'http://localhost:3000/serverupload',
+            method: 'post',
+            encType: 'multipart/form-data' },
+          React.createElement('input', { id: 'serverUpload', type: 'file', name: 'serverUpload' }),
+          React.createElement('input', { type: 'submit' })
+        )
+      ),
+      React.createElement(
+        'div',
+        null,
+        'Sending Data to Video Classifier'
+      ),
+      React.createElement('div', { id: 'thumbs' })
     );
   }
 });
@@ -25303,10 +25448,9 @@ var Search = React.createClass({
     return {
       generalQuery: '',
       specificQuery: '',
-      showProgress: false
+      showProgress: true //will be changed to default false later so it conditionally renders whatver urls we pull
     };
   },
-  componentDidRender: function componentDidRender() {},
   updateGeneralQuery: function updateGeneralQuery(event) {
     this.setState({
       generalQuery: event.target.value
@@ -25319,7 +25463,7 @@ var Search = React.createClass({
   },
   handleSubmit: function handleSubmit(event) {
     event.preventDefault();
-    console.log('here');
+    console.log('handled submit');
     this.setState({
       showProgress: true
     });
