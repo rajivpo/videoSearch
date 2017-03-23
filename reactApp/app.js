@@ -1,107 +1,73 @@
-var React = require('react');
-var Redux = require('redux');
-var ReactDOM = require('react-dom');
-var styles = require('../styles.css')
+import React, {Component} from 'react'
+import ReactDOM from 'react-dom'
+var ReactS3Uploader = require('react-s3-uploader');
 
-var SendingData = React.createClass({
-  componentDidMount(){
-    //this code is likely all wrong and untested
-    var i = 0;
-    var video = document.createElement("video");
-    var thumbs = document.getElementById("thumbs");
-
-    video.addEventListener('loadeddata', function() {
-      thumbs.innerHTML = "";
-      video.currentTime = i;
-    }, false);
-
-    video.addEventListener('seeked', function() {
-      // now video has seeked and current frames will show
-      // at the time as we expect
-      generateThumbnail(i);
-      i++;// when frame is captured, increase
-      if (i <= video.duration) { // if we are not passed end, seek to next interval
-        // this will trigger another seeked event
-        video.currentTime = i;
-      }
-      else {
-        // DONE!, next action
-        alert("done!")
-      }
-
-    }, false);
-
-    video.preload = "auto";
-    video.src = "https://media.w3.org/2010/05/sintel/trailer.mp4";
-
-    function generateThumbnail() {
-      var c = document.createElement("canvas");
-      var ctx = c.getContext("2d");
-      c.width = 160;
-      c.height = 90;
-      ctx.drawImage(video, 0, 0, 160, 90);
-      thumbs.appendChild(c);
+class Main extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      character: '',
+      probability: 0
     }
-  },
+  }
+  getResult(evt){
+    evt.preventDefault();
+    fetch('http://localhost:3000/gameinfo')
+    .then((response) => response.json())
+    .then((responseJson) => {
+      this.setState({
+        character: responseJson.character,
+        probability: responseJson.probability
+      })
+    })
+  }
+  uploadFile(evt){
+    evt.preventDefault();
+  }
   render(){
-    return (
+    var gameInfo = '';
+    if(this.state.character.length > 0 && this.state.character === 'Blitzcrank' && this.state.probability > 0){
+      gameInfo = 'We are ' + this.state.probability +'% confident that you are playing ' + this.state.character;
+    } else if(this.state.character === 'unidentifiable character'){
+      gameInfo = 'We are unable to confidently identify the character you are playing. Our best guess is that you are playing Blitzcrank (' + this.state.probability + '%)'
+    }
+    return(
       <div>
-        <div>Sending Data to Video Classifier</div>
-        <video width="320" height="240" controls>
-          <source src="../video.mp4" type='video/mp4' /> //this is for a local source not an html link but lmao
-          Your browser does not support the video tag.
-        </video>
-        <div id="thumb">
-        </div>
+      <h1 style={{textAlign: 'center'}}>Play smarter. Carry harder.</h1>
+      <p>League of Legends is a game of skill. Hitting skillshots makes for increased damage,
+      higher winrates, and epic montages.
+      Why settle for missing skillshots?
+      </p>
+      <p>Untilt.gg uses advanced machine learning and computer vision unlock your skillshot potential.</p>
+      <h2 style = {{textAlign: 'center'}}> Upload a video to get gameplay analytics</h2>
+      <div style ={{textAlign: 'center', paddingBottom: 20}}>
+      <form onSubmit = {this.uploadFile}>
+      <input type='file' name='fileupload'/>
+      <input type = 'submit' value = 'Upload File'/>
+      </form>
+      </div>
+      <div style={{textAlign: 'center'}}>
+      <form onSubmit = {this.getResult}>
+      <input type='submit' value='Get Results!'/>
+      </form>
+      <h2>{gameInfo}</h2>
+      </div>
+      <ReactS3Uploader
+          signingUrl="/s3/sign"
+          signingUrlMethod="GET"
+          accept="image/*"
+          signingUrlWithCredentials={ true }      // in case when need to pass authentication credentials via CORS
+          uploadRequestHeaders={{ 'x-amz-acl': 'public-read' }}  // this is the default
+          contentDisposition="auto"
+          scrubFilename={(filename) => filename.replace(/[^\w\d_\-\.]+/ig, '')}
+          server="http://localhost:3000" />
+
       </div>
     )
   }
-})
-
-var Search = React.createClass({
-  getInitialState(){
-    return{
-      generalQuery: '',
-      specificQuery: '',
-      showProgress: false //will be changed to default false later so it conditionally renders whatver urls we pull
-    }
-  },
-  updateGeneralQuery(event){
-    this.setState({
-      generalQuery: event.target.value
-    })
-  },
-  updateSpecificQuery(event){
-    this.setState({
-      specificQuery: event.target.value
-    })
-  },
-  handleSubmit(event){
-    event.preventDefault();
-    console.log('handled submit')
-    this.setState({
-      showProgress: true
-    });
-  },
-  render(){
-    return (
-      <div>
-        <h1>Search!</h1>
-        <form onSubmit = {this.handleSubmit}>
-          <input type='text' value={this.state.generalQuery} onChange={this.updateGeneralQuery} placeholder='General Search Query'/>
-          <input type='text' value={this.state.specificQuery} onChange={this.updateSpecificQuery} placeholder='Specific Search Query'/>
-          <input type = 'submit' value = 'Submit'/>
-        </form>
-        <div>
-          {this.state.showProgress ? <SendingData /> : <div>Pick Video Query to Send to Classifier</div>}
-        </div>
-      </div>
-    )
-  }
-})
-
+}
 
 ReactDOM.render(
-  <Search />,
+  <Main/>,
   document.getElementById('root')
-);
+)
