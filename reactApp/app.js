@@ -3,20 +3,6 @@ import React, {Component} from 'react'
 import styles from '../styles.css'
 import ReactDOM from 'react-dom'
 var ReactS3Uploader = require('react-s3-uploader');
-var url;
-
-function getSignedUrl(file, callback) {
-  const params = {
-    numba: 1,
-    file: file
-  };
-  fetch('http://localhost:3000/my/signing/server', {
-    method: 'post',
-    body: params })
-  .catch(error => {
-    console.error(error);
-  });
-}
 
 class Main extends React.Component {
   constructor() {
