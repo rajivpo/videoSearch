@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "webpack": "webpack",
-    "start": "nodemon ./backend/server.js",
+    "start": "node ./backend/server.js",
     "prod": "webpack -p"
   },
   "author": "",
@@ -33,7 +33,7 @@
     "react-s3-uploader": "^4.0.3",
     "style-loader": "^0.13.2",
     "webpack": "^2.2.1",
-    "webpack-dev-server": "^2.4.2",
+    "webpack-dev-server": "^2.4.2"
   },
   "devDependencies": {
     "babel-preset-react": "^6.23.0"
