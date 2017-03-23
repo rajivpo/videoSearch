@@ -1,5 +1,8 @@
 node_modules/
-bodyparser.js
-.bashrc
+video.mp4
 config.json
 env.sh
+npm-debug.log
+.DS_Store
+/build
+.bashrc

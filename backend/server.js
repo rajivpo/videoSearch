@@ -21,6 +21,7 @@ var s3 = new aws.S3()
 
 var app = express();
 
+
 app.use(express.static('build'));
 
 //middleware configured to use folder 'build' for static? script tags
@@ -97,15 +98,12 @@ app.get('/predict', function(req, res){
 
 
 app.use('/s3', require('react-s3-uploader/s3router')({
-  bucket: "videosearch-assets",
-  region: 'us-west-1', //optional
-  signatureVersion: 'v4', //optional (use for some amazon regions: frankfurt and others)
-  headers: {'Access-Control-Allow-Origin': '*'}, // optional
-  ACL: 'private'
+    bucket: "videosearch-assets",
+    region: 'us-west-1', //optional
+    signatureVersion: 'v4', //optional (use for some amazon regions: frankfurt and others)
+    headers: {'Access-Control-Allow-Origin': '*'}, // optional
+    ACL: 'private'
   })
-)
-
-// .then(
 // var options = {
 //   // host: 'whatever the fuck heroku is called',
 //   port: 8080,
@@ -114,8 +112,7 @@ app.use('/s3', require('react-s3-uploader/s3router')({
 //     'Content-Type': 'application/x-www-form-urlencoded',
 //     'Content-Length': Buffer.byteLength(source)
 //   }
-// });
-//
+// };
 // var httpreq = http.request(options, function (response) {
 //   response.setEncoding('utf8');
 //   response.on('data', function (chunk) {
@@ -131,6 +128,7 @@ app.use('/s3', require('react-s3-uploader/s3router')({
 // httpreq.write(source);
 // httpreq.end();
 // res.redirect('/')
+);
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
