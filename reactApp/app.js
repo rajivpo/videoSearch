@@ -7,6 +7,7 @@ var ReactS3Uploader = require('react-s3-uploader');
 class Main extends React.Component {
   constructor() {
     super();
+    this.getResult = this.getResult.bind(this)
     this.state = {
       character: '',
       probability: 0,
@@ -14,15 +15,22 @@ class Main extends React.Component {
   }
   getResult(evt){
     evt.preventDefault();
+    var self = this;
+    evt.preventDefault();
     fetch('http://localhost:3000/gameinfo')
-    .then((response) => response.json())
-    .then((responseJson) => {
-      this.setState({
+    .then(function(response){
+      return response.json()
+    })
+    .then(function(responseJson){
+      self.setState({
         character: responseJson.character,
         probability: responseJson.probability
       })
-    })
-  }
+  })
+  .catch(function(err){
+    console.log(err);
+  })
+}
   onFinish(){
     fetch('http://localhost:3000/uploadurl',{
       method: 'post',
@@ -30,7 +38,7 @@ class Main extends React.Component {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        url: 'https://s3-us-west-1.amazonaws.com/videosearch-assets/2a7a8fed-8eb0-407e-880a-5ec43fc82932_testing4.mp4'
+        url: 'https://s3-us-west-1.amazonaws.com/videosearch-assets/2716116f-ff91-461e-888f-54fe76230edb_blitzcrank.mp4'
       })
     }).catch(function(err){
       console.log(err);
@@ -38,9 +46,9 @@ class Main extends React.Component {
   }
   render(){
     var gameInfo = '';
-    if(this.state.character.length > 0 && this.state.character === 'Blitzcrank' && this.state.probability > 0){
-      gameInfo = 'We are ' + this.state.probability +'% confident that you are playing ' + this.state.character;
-    } else if(this.state.character === 'unidentifiable character'){
+    if(this.state.character === 'Blitzcrank' && this.state.probability > 0){
+      gameInfo = 'We are ' + this.state.probability*100 +'% confident that you are playing ' + this.state.character;
+    } else if(this.state.character === 'an unidentifiable character'){
       gameInfo = 'We are unable to confidently identify the character you are playing. Our best guess is that you are playing Blitzcrank (' + this.state.probability + '%)'
     }
     return(
