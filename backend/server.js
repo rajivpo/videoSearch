@@ -98,12 +98,12 @@ app.get('/predict', function(req, res){
 
 
 app.use('/s3', require('react-s3-uploader/s3router')({
-  bucket: "videosearch-assets",
-  region: 'us-west-1', //optional
-  signatureVersion: 'v4', //optional (use for some amazon regions: frankfurt and others)
-  headers: {'Access-Control-Allow-Origin': '*'}, // optional
-  ACL: 'private'
-})
+    bucket: "videosearch-assets",
+    region: 'us-west-1', //optional
+    signatureVersion: 'v4', //optional (use for some amazon regions: frankfurt and others)
+    headers: {'Access-Control-Allow-Origin': '*'}, // optional
+    ACL: 'private'
+  })
 // var options = {
 //   // host: 'whatever the fuck heroku is called',
 //   port: 8080,
@@ -133,16 +133,3 @@ app.use('/s3', require('react-s3-uploader/s3router')({
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
 })
-
-
-// aws.config.loadFromPath('backend/config.json');
-// var s3Bucket = new aws.S3( { params: {Bucket: 'videosearch-assets'} } );
-//
-// var data = {Key: 'rajiv_profile1', Body: '../rajiv1.jpg'};
-// s3Bucket.putObject(data, function(err, data){
-//   if (err)
-//     { console.log('Error uploading data: ', err);
-//     } else {
-//       console.log('succesfully uploaded the image!');
-//     }
-// });

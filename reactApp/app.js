@@ -1,3 +1,4 @@
+
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 var ReactS3Uploader = require('react-s3-uploader');
@@ -23,12 +24,51 @@ class Main extends React.Component {
       console.log(1)
     }
   },
+  serverUpload(evt){
+    // evt.preventDefault();
+    //
+    //
+    // var file = $('#serverUpload').prop('files')[0]
+    // console.log('filee: ',file)
+    // var source = ''
+    // var reader  = new FileReader();
+    //
+    //
+    // reader.addEventListener("load", function () {
+    //   source = reader.result;
+    //   var payload = {
+    //     file: file
+    //   };
+    //   var data = JSON.stringify(payload)
+    //   console.log('source found')
+    //   fetch("/serverupload", {
+    //     method: "POST",
+    //     headers: {
+    //       'Accept': 'application/json, text/plain, */*',
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: data
+    //   }).then((resp) => resp.json()).then(console.log).catch
+    // }, false);
+    //
+    // if (file) {
+    //   reader.readAsDataURL(file);
+    //   console.log(1)
+    // }
+  },
   render(){
     return (
       <div>
         <div>
           <form onSubmit={this.parseVideo}>
-            <input id="my-input" type="file" name="myfile" ref="myfile" />
+            <input id="browserUpload" type="file" name="browserUpload" />
+            <input type="submit"
+            />
+          </form>
+          <form action="http://localhost:3000/serverupload"
+            method="post"
+            encType="multipart/form-data">
+            <input id="serverUpload" type="file" name="serverUpload" />
             <input type="submit" />
           </form>
         </div>
@@ -46,7 +86,7 @@ var Search = React.createClass({
       specificQuery: '',
       showProgress: true //will be changed to default false later so it conditionally renders whatver urls we pull
     }
- 
+
     })
   }
   uploadFile(evt){
