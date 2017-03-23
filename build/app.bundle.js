@@ -24474,19 +24474,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var ReactS3Uploader = __webpack_require__(81);
-var url;
-
-function getSignedUrl(file, callback) {
-  var params = {
-    numba: 1,
-    file: file
-  };
-  fetch('http://localhost:3000/my/signing/server', {
-    method: 'post',
-    body: params }).catch(function (error) {
-    console.error(error);
-  });
-}
 
 var Main = function (_React$Component) {
   _inherits(Main, _React$Component);
@@ -24496,6 +24483,7 @@ var Main = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (Main.__proto__ || Object.getPrototypeOf(Main)).call(this));
 
+    _this.getResult = _this.getResult.bind(_this);
     _this.state = {
       character: '',
       probability: 0
@@ -24506,16 +24494,18 @@ var Main = function (_React$Component) {
   _createClass(Main, [{
     key: 'getResult',
     value: function getResult(evt) {
-      var _this2 = this;
-
+      evt.preventDefault();
+      var self = this;
       evt.preventDefault();
       fetch('http://localhost:3000/gameinfo').then(function (response) {
         return response.json();
       }).then(function (responseJson) {
-        _this2.setState({
+        self.setState({
           character: responseJson.character,
           probability: responseJson.probability
         });
+      }).catch(function (err) {
+        console.log(err);
       });
     }
   }, {
@@ -24539,9 +24529,9 @@ var Main = function (_React$Component) {
       var _React$createElement;
 
       var gameInfo = '';
-      if (this.state.character.length > 0 && this.state.character === 'Blitzcrank' && this.state.probability > 0) {
-        gameInfo = 'We are ' + this.state.probability + '% confident that you are playing ' + this.state.character;
-      } else if (this.state.character === 'unidentifiable character') {
+      if (this.state.character === 'Blitzcrank' && this.state.probability > 0) {
+        gameInfo = 'We are ' + this.state.probability * 100 + '% confident that you are playing ' + this.state.character;
+      } else if (this.state.character === 'an unidentifiable character') {
         gameInfo = 'We are unable to confidently identify the character you are playing. Our best guess is that you are playing Blitzcrank (' + this.state.probability + '%)';
       }
       return _react2.default.createElement(
