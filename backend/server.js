@@ -47,45 +47,64 @@ app.get('/gameinfo', function(req, res){
 
 //Steps 9-15
 app.post('/predict', function(req, res){
+  console.log('req.body.source', req.body.source)
   var allKeys = req.body.source;
   var predictions = [];
-    var idx = 0
-    var input = setInterval(function(){
-      if(idx === allKeys.length - 1){
-        clearInterval(input)
-      }
-      clari.models.predict(Clarifai.GENERAL_MODEL, allKeys[idx]).then(
+  var idx = 0
+
+  // var input = setInterval(function(){
+  //   if(idx === allKeys.length - 1){
+  //     clearInterval(input)
+  //   }
+  //   clari.models.predict(Clarifai.GENERAL_MODEL, allKeys[idx]).then(
+  //     function(response) {
+  //       predictions.push(response.outputs[0].data.concepts[0]);
+  //     },
+  //     function(err) {
+  //       console.error(err);
+  //     }
+  //   );
+  //   idx++;
+  // }, 100)
+
+  var counter = 0;
+  allKeys.forEach(function(item){
+    clari.models.predict(Clarifai.GENERAL_MODEL, item).then(
         function(response) {
+          counter++;
+          console.log(counter, allKeys.length);
           predictions.push(response.outputs[0].data.concepts[0]);
+          if (counter === allKeys.length){
+            console.log('predictions', predictions);
+            var probability = 0;
+            predictions.forEach(function(item){
+              probability += item.value;
+            })
+            probability /= predictions.length;
+            console.log(probability);
+            var character = 'an unidentifiable character';
+            if(probability > .95){
+              character = 'Blitzcrank';
+            }
+            var gamedata = Game({
+              character: character,
+              probability: probability
+            })
+            gamedata.save(function(err){
+              if(err){
+                console.log('Error', err);
+              } else{
+                console.log(gamedata)
+                console.log('Data was saved')
+              }
+            });
+          }
         },
         function(err) {
-          console.error(err);
+          console.error('eeeeeeeeeeerrrrrrrrrrrrr', err);
         }
       );
-      idx++;
-    },100)
-
-  var probability = 0;
-  predictions.forEach(function(item){
-    probability += item.value;
   })
-  probability /= predictions.length;
-  var character = 'an unidentifiable character';
-  if(probability > .95){
-    character = 'Blitzcrank';
-  }
-  var gamedata = Game({
-    character: character,
-    probability: probability
-  })
-  gamedata.save(function(err){
-    if(err){
-      console.log('Error', err);
-    } else{
-      console.log('Data was saved')
-    }
-  })
-  res.redirect('/')
 })
 
 app.post('/uploadurl', function(req, res){
