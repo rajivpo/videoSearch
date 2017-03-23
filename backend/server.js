@@ -21,6 +21,7 @@ var s3 = new aws.S3()
 
 var app = express();
 
+
 app.use(express.static('build'));
 
 //middleware configured to use folder 'build' for static? script tags
@@ -132,3 +133,16 @@ app.use('/s3', require('react-s3-uploader/s3router')({
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
 })
+
+
+// aws.config.loadFromPath('backend/config.json');
+// var s3Bucket = new aws.S3( { params: {Bucket: 'videosearch-assets'} } );
+//
+// var data = {Key: 'rajiv_profile1', Body: '../rajiv1.jpg'};
+// s3Bucket.putObject(data, function(err, data){
+//   if (err)
+//     { console.log('Error uploading data: ', err);
+//     } else {
+//       console.log('succesfully uploaded the image!');
+//     }
+// });

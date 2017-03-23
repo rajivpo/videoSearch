@@ -19,6 +19,34 @@ class Main extends React.Component {
         character: responseJson.character,
         probability: responseJson.probability
       })
+      reader.readAsDataURL(file);
+      console.log(1)
+    }
+  },
+  render(){
+    return (
+      <div>
+        <div>
+          <form onSubmit={this.parseVideo}>
+            <input id="my-input" type="file" name="myfile" ref="myfile" />
+            <input type="submit" />
+          </form>
+        </div>
+        <div>Sending Data to Video Classifier</div>
+        <div id="thumbs" />
+      </div>
+    )
+  }
+})
+
+var Search = React.createClass({
+  getInitialState(){
+    return{
+      generalQuery: '',
+      specificQuery: '',
+      showProgress: true //will be changed to default false later so it conditionally renders whatver urls we pull
+    }
+ 
     })
   }
   uploadFile(evt){

@@ -6,6 +6,7 @@
   "scripts": {
     "webpack": "webpack",
     "start": "node ./backend/server.js",
+
     "prod": "webpack -p"
   },
   "author": "",
@@ -18,10 +19,12 @@
     "body-parser": "^1.17.1",
     "clarifai": "^2.1.4-dev",
     "css-loader": "^0.27.3",
+    "ejs": "^2.5.6",
     "express": "^4.15.2",
     "express-fileupload": "^0.1.2",
     "lodash": "^4.17.4",
     "mongoose": "^4.9.1",
+
     "path": "^0.12.7",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
