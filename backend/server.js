@@ -48,6 +48,11 @@ app.get('/gameinfo', function(req, res){
     }
   })
 })
+
+app.post('/uploadurl', function(req,res){
+  console.log('req.body', req.body)
+})
+
 //Steps 10,11, 12,13, 14, 15 //get rid of 10 and 11
 app.get('/predict', function(req, res){
   var allKeys = [];

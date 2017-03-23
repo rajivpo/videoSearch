@@ -91,7 +91,16 @@ var Search = React.createClass({
   }
   uploadFile(evt){
     evt.preventDefault();
-  }
+  },
+  onFinish () {
+    console
+    fetch('/fileuploaded', {
+      method: 'POST',
+      body: {
+
+      }
+    })
+  },
   render(){
     var gameInfo = '';
     if(this.state.character.length > 0 && this.state.character === 'Blitzcrank' && this.state.probability > 0){
@@ -123,11 +132,15 @@ var Search = React.createClass({
       <ReactS3Uploader
           signingUrl="/s3/sign"
           signingUrlMethod="GET"
-          accept="image/*"
+          accept="video/*"
           signingUrlWithCredentials={ true }      // in case when need to pass authentication credentials via CORS
           uploadRequestHeaders={{ 'x-amz-acl': 'public-read' }}  // this is the default
           contentDisposition="auto"
-          scrubFilename={(filename) => filename.replace(/[^\w\d_\-\.]+/ig, '')}
+          onFinish = {this.onFinish}
+          scrubFilename={(filename) => {
+            uploadedfilename = filename.replace(/[^\w\d_\-\.]+/ig, '')
+            return uploadedfilename
+          }}
           server="http://localhost:3000" />
 
       </div>
