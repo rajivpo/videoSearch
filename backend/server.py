@@ -13,6 +13,7 @@ import math
 import numpy as np
 import s3
 import yaml
+
 with open('s3.yaml', 'r') as fi:
     config = yaml.load(fi)
 connection = s3.S3Connection(**config['s3'])
@@ -28,10 +29,12 @@ class Handler(BaseHTTPRequestHandler):
         videoFile = post_body #node passes python string like object containing the file
         print 'videoFile address', videoFile
         # videoFile='https://media.w3.org/2010/05/sintel/trailer.mp4' #as long as link is mp4 it works
+
         #here we create a unique bucket for this upload
         # my_bucket_name = 'picturefile'+videoFile
         # storage.bucket_create(my_bucket_name)
         # assert storage.bucket_exists(my_bucket_name)
+
         #parse the video
         vidcap = cv2.VideoCapture(videoFile)
         success,image = vidcap.read()
@@ -49,11 +52,13 @@ class Handler(BaseHTTPRequestHandler):
                 cv2.imwrite(filenameuploaded, image)
                 counter+=1
                 print 'saving'
+
                 # #here we upload file to default url
                 # try:
                 #     storage.write("pics.jpg", filenameuploaded)
                 # except StorageError, e:
                 #     print 'failed:', e
+
         vidcap.release()
         print "Complete"
         #-------------------------------------
