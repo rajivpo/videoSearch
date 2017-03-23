@@ -30,7 +30,7 @@ class Main extends React.Component {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        url: 'https://s3-us-west-1.amazonaws.com/videosearch-assets/2a7a8fed-8eb0-407e-880a-5ec43fc82932_testing4.mp4'
+        url: 'https://s3-us-west-1.amazonaws.com/videosearch-assets/c53b851e-f8d7-45b3-9833-674d10a00938_blitzcrank.mp4'
       })
     }).catch(function(err){
       console.log(err);

@@ -24474,19 +24474,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var ReactS3Uploader = __webpack_require__(81);
-var url;
-
-function getSignedUrl(file, callback) {
-  var params = {
-    numba: 1,
-    file: file
-  };
-  fetch('http://localhost:3000/my/signing/server', {
-    method: 'post',
-    body: params }).catch(function (error) {
-    console.error(error);
-  });
-}
 
 var Main = function (_React$Component) {
   _inherits(Main, _React$Component);
