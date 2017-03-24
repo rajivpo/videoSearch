@@ -1,4 +1,4 @@
 # videoSearch
 Extract insights from video
 
-Optimize <strike>later</strike> eventually
+A primitive version of a work in progress
