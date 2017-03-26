@@ -11,8 +11,7 @@ var Game = models.Game;
 
 var Clarifai = require('clarifai');
 var clari = new Clarifai.App(
-  '__3uMWKnxtW80PG8kr748bFYLI7cxWOQWtuKIWdu',
-  'kuG-qTBwu_weD0peNgwBXF8mvjwNsD9fRRlTLAhN'
+  //credentials
 );
 clari.getToken();
 
