@@ -24475,6 +24475,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var ReactS3Uploader = __webpack_require__(81);
 
+// const io = require('socket.io-client')
+// const socket = io()
+
 var Main = function (_React$Component) {
   _inherits(Main, _React$Component);
 
@@ -24511,6 +24514,7 @@ var Main = function (_React$Component) {
   }, {
     key: 'onFinish',
     value: function onFinish() {
+      var self = this;
       fetch('http://localhost:3000/uploadurl', {
         method: 'post',
         headers: {
@@ -24519,7 +24523,18 @@ var Main = function (_React$Component) {
         body: JSON.stringify({
           url: 'https://s3-us-west-1.amazonaws.com/videosearch-assets/2716116f-ff91-461e-888f-54fe76230edb_blitzcrank.mp4'
         })
-      }).catch(function (err) {
+      })
+      // .then(()=> {
+      //   console.log('setting up socket')
+      //   return socket.on('results', function(data){
+      //     console.log('inside results client socket', data)
+      //     self.setState({
+      //       character: data.character,
+      //       probability: data.probability
+      //     })
+      //   })
+      // })
+      .catch(function (err) {
         console.log(err);
       });
     }

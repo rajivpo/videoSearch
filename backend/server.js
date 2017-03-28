@@ -9,6 +9,7 @@ var mongoose = require('mongoose')
 var models = require('../models/models.js')
 var Game = models.Game;
 
+
 var Clarifai = require('clarifai');
 var clari = new Clarifai.App(
   '__3uMWKnxtW80PG8kr748bFYLI7cxWOQWtuKIWdu',
@@ -21,6 +22,10 @@ var s3 = new aws.S3()
 
 var app = express();
 
+var server=app.listen(3000, function () {
+  console.log('App listening on port 3000!')
+})
+// var io=require('socket.io').listen(server);
 
 app.use(express.static('build'));
 
@@ -96,6 +101,13 @@ app.post('/predict', function(req, res){
               } else{
                 console.log(gamedata)
                 console.log('Data was saved')
+
+                // io.on('connection', function (socket) {
+                //   console.log('connected results socket');
+                //   socket.emit('results', gamedata)
+                // });
+
+                console.log('after io.on')
               }
             });
           }
@@ -109,6 +121,7 @@ app.post('/predict', function(req, res){
 
 app.post('/uploadurl', function(req, res){
   // var source = req.body.url //this doesn't work yet
+
   var source = req.body.url
   console.log('source',source)
   var options = {
@@ -148,6 +161,6 @@ app.use('/s3', require('react-s3-uploader/s3router')({
 //
 );
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
-})
+// app.listen(3000, function () {
+//   console.log('Example app listening on port 3000!')
+// })
