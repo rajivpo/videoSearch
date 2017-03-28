@@ -1,5 +1,4 @@
 # videoSearch
-A platform for finding doges in video
+Extract insights from video
 
-Optimize <strike>later</strike> 
-         never
+A primitive version of a work in progress

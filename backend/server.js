@@ -12,8 +12,7 @@ var Game = models.Game;
 
 var Clarifai = require('clarifai');
 var clari = new Clarifai.App(
-  '__3uMWKnxtW80PG8kr748bFYLI7cxWOQWtuKIWdu',
-  'kuG-qTBwu_weD0peNgwBXF8mvjwNsD9fRRlTLAhN'
+  //credentials
 );
 clari.getToken();
 
@@ -152,9 +151,9 @@ app.post('/uploadurl', function(req, res){
 })
 
 app.use('/s3', require('react-s3-uploader/s3router')({
-    bucket: "videosearch-assets",
-    region: 'us-west-1', //optional
-    signatureVersion: 'v4', //optional (use for some amazon regions: frankfurt and others)
+    bucket: "",
+    region: '', //optional
+    signatureVersion: '', //optional (use for some amazon regions: frankfurt and others)
     headers: {'Access-Control-Allow-Origin': '*'}, // optional
     ACL: 'private'
   })

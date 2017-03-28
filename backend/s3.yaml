@@ -1,6 +1,6 @@
 s3:
-    access_key_id: "AKIAIFGFMGIZPPO26GAQ"
-    secret_access_key: "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"
-    default_bucket: "leaguevideotest"
-    endpoint: "s3-us-west-2.amazonaws.com"
-    region: "us-west-2"
+    access_key_id: "
+    secret_access_key: ""
+    default_bucket: ""
+    endpoint: ""
+    region: ""
