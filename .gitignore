@@ -1,8 +1,8 @@
 node_modules/
-video.mp4
 config.json
 env.sh
 npm-debug.log
 .DS_Store
 /build
 .bashrc
+s3.yaml
