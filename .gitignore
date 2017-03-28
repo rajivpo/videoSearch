@@ -6,3 +6,4 @@ npm-debug.log
 /build
 .bashrc
 s3.yaml
+build/
