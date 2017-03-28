@@ -5,8 +5,13 @@ var fileUpload = require('express-fileupload');
 var routes = require('./routes');
 
 
+
 var app = express();
 
+var server=app.listen(3000, function () {
+  console.log('App listening on port 3000!')
+})
+// var io=require('socket.io').listen(server);
 
 app.use(express.static('build'));
 
@@ -19,6 +24,7 @@ app.use('/', routes);
 
 
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
-})
+
+// app.listen(3000, function () {
+//   console.log('Example app listening on port 3000!')
+// })
