@@ -67,7 +67,6 @@ class Main extends React.Component {
           signingUrl="/s3/sign"
           signingUrlMethod="GET"
           accept="video/*"
-          onFinish = {this.onFinish}
           signingUrlWithCredentials={ true }      // in case when need to pass authentication credentials via CORS
           uploadRequestHeaders={{ 'x-amz-acl': 'public-read' }}  // this is the default
           contentDisposition="auto"

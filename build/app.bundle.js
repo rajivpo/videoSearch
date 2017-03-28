@@ -24465,8 +24465,6 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -24526,8 +24524,6 @@ var Main = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _React$createElement;
-
       var gameInfo = '';
       if (this.state.character === 'Blitzcrank' && this.state.probability > 0) {
         gameInfo = 'We are ' + this.state.probability * 100 + '% confident that you are playing ' + this.state.character;
@@ -24561,17 +24557,18 @@ var Main = function (_React$Component) {
             ' Upload a video to get gameplay analytics'
           ),
           _react2.default.createElement('div', { style: { textAlign: 'center', paddingBottom: 20 } }),
-          _react2.default.createElement(ReactS3Uploader, (_React$createElement = {
+          _react2.default.createElement(ReactS3Uploader, {
             signingUrl: '/s3/sign',
             signingUrlMethod: 'GET',
             accept: 'video/*',
-            onFinish: this.onFinish,
             signingUrlWithCredentials: true // in case when need to pass authentication credentials via CORS
             , uploadRequestHeaders: { 'x-amz-acl': 'public-read' } // this is the default
-            , contentDisposition: 'auto'
-          }, _defineProperty(_React$createElement, 'onFinish', this.onFinish), _defineProperty(_React$createElement, 'scrubFilename', function scrubFilename(filename) {
-            return filename.replace(/[^\w\d_\-\.]+/ig, '');
-          }), _defineProperty(_React$createElement, 'server', 'http://localhost:3000'), _React$createElement))
+            , contentDisposition: 'auto',
+            onFinish: this.onFinish,
+            scrubFilename: function scrubFilename(filename) {
+              return filename.replace(/[^\w\d_\-\.]+/ig, '');
+            },
+            server: 'http://localhost:3000' })
         ),
         _react2.default.createElement(
           'div',

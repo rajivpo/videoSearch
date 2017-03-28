@@ -12,8 +12,8 @@ var models = require('../models/models.js')
 var Game = models.Game;
 var Clarifai = require('clarifai');
 
-// aws.config.loadFromPath('./backend/config.json')
-// var s3 = new aws.S3()
+aws.config.loadFromPath('./backend/config.json')
+var s3 = new aws.S3()
 
 var app = express();
 
@@ -116,13 +116,13 @@ router.post('/uploadurl', function(req, res){
   res.redirect('/')
 })
 
-// router.use('/s3', require('react-s3-uploader/s3router')({
-//     bucket: "",
-//     region: '', //optional
-//     signatureVersion: '', //optional (use for some amazon regions: frankfurt and others)
-//     headers: {'Access-Control-Allow-Origin': '*'}, // optional
-//     ACL: 'private'
-//   })
-// );
+router.use('/s3', require('react-s3-uploader/s3router')({
+    bucket: "videosearch-assets",
+    region: 'us-west-1', //optional
+    signatureVersion: 'v4', //optional (use for some amazon regions: frankfurt and others)
+    headers: {'Access-Control-Allow-Origin': '*'}, // optional
+    ACL: 'private'
+  })
+);
 
 module.exports = router;
