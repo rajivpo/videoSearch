@@ -46,6 +46,12 @@ class Handler(BaseHTTPRequestHandler):
                 counter+=1
                 print 'saving created image'
 
+                #AWS STUFF TO SPECIFY FOR UNIQUE USER
+                #here we create a unique bucket for this upload
+                # my_bucket_name = 'picturefile'+videoFile
+                # storage.bucket_create(my_bucket_name)
+                # assert storage.bucket_exists(my_bucket_name)
+
                 #HERE WE SAVE TO AWS
                 # awsSave(filenameuploaded)
                 vidcap.release()
@@ -60,19 +66,12 @@ class Handler(BaseHTTPRequestHandler):
         print 'videoFile address', videoFile
         # videoFile='https://media.w3.org/2010/05/sintel/trailer.mp4' #as long as link is mp4 it works
 
-
-    #AWS STUFF TO SPECIFY FOR UNIQUE USER
-        #here we create a unique bucket for this upload
-        # my_bucket_name = 'picturefile'+videoFile
-        # storage.bucket_create(my_bucket_name)
-        # assert storage.bucket_exists(my_bucket_name)
-
-    #PARSING OF VIDEO
+        #PARSING OF VIDEO
         parseVideo(videoFile)
 
         print "Video Parsing Complete"
         #-------------------------------------
-    #POST BACK TO NODE SERVER THE LINKS FROM AWS
+        #POST BACK TO NODE SERVER THE LINKS FROM AWS
         payload = {
             'source': ['https://s3.amazonaws.com/leaguevideotest/pics1.jpg','https://s3.amazonaws.com/leaguevideotest/pics2.jpg','https://s3.amazonaws.com/leaguevideotest/pics3.jpg','https://s3.amazonaws.com/leaguevideotest/pics4.jpg','https://s3.amazonaws.com/leaguevideotest/pics5.jpg','https://s3.amazonaws.com/leaguevideotest/pics6.jpg']
         }
