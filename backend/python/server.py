@@ -18,23 +18,16 @@ with open('s3.yaml', 'r') as fi:
     config = yaml.load(fi)
 connection = s3.S3Connection(**config['s3'])
 storage = s3.Storage(connection)
+
 class Handler(BaseHTTPRequestHandler):
-    def do_POST(self):
-        print "in post method"
-        cgitb.enable()
-        content_len = int(self.headers.getheader('content-length', 0))
-        post_body = self.rfile.read(content_len)
-        # videoFile = post_body[11:(len(post_body)-2)] #node passes python string like object containing the file
-        #jk i changed it so it only posts a string
-        videoFile = post_body #node passes python string like object containing the file
-        print 'videoFile address', videoFile
-        # videoFile='https://media.w3.org/2010/05/sintel/trailer.mp4' #as long as link is mp4 it works
-
-        #here we create a unique bucket for this upload
-        # my_bucket_name = 'picturefile'+videoFile
-        # storage.bucket_create(my_bucket_name)
-        # assert storage.bucket_exists(my_bucket_name)
-
+    def awsSave(filenameuploaded):
+        # #here we upload file to default url
+        # try:
+        #     storage.write("pics.jpg", filenameuploaded)
+        # except StorageError, e:
+        #     print 'failed:', e
+        print 'hi'
+    def parseVideo(videoFile):
         #parse the video
         vidcap = cv2.VideoCapture(videoFile)
         success,image = vidcap.read()
@@ -51,18 +44,35 @@ class Handler(BaseHTTPRequestHandler):
                 filenameuploaded = 'pics'+str(counter)+'.jpg'
                 cv2.imwrite(filenameuploaded, image)
                 counter+=1
-                print 'saving'
+                print 'saving created image'
 
-                # #here we upload file to default url
-                # try:
-                #     storage.write("pics.jpg", filenameuploaded)
-                # except StorageError, e:
-                #     print 'failed:', e
+                #HERE WE SAVE TO AWS
+                # awsSave(filenameuploaded)
+                vidcap.release()
+    def do_POST(self):
+        print "in post method"
+        cgitb.enable()
+        content_len = int(self.headers.getheader('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        # videoFile = post_body[11:(len(post_body)-2)] #node passes python string like object containing the file
+        #jk i changed it so it only posts a string
+        videoFile = post_body #node passes python string like object containing the file
+        print 'videoFile address', videoFile
+        # videoFile='https://media.w3.org/2010/05/sintel/trailer.mp4' #as long as link is mp4 it works
 
-        vidcap.release()
-        print "Complete"
+
+    #AWS STUFF TO SPECIFY FOR UNIQUE USER
+        #here we create a unique bucket for this upload
+        # my_bucket_name = 'picturefile'+videoFile
+        # storage.bucket_create(my_bucket_name)
+        # assert storage.bucket_exists(my_bucket_name)
+
+    #PARSING OF VIDEO
+        parseVideo(videoFile)
+
+        print "Video Parsing Complete"
         #-------------------------------------
-        #STEP 9 Can Post
+    #POST BACK TO NODE SERVER THE LINKS FROM AWS
         payload = {
             'source': ['https://s3.amazonaws.com/leaguevideotest/pics1.jpg','https://s3.amazonaws.com/leaguevideotest/pics2.jpg','https://s3.amazonaws.com/leaguevideotest/pics3.jpg','https://s3.amazonaws.com/leaguevideotest/pics4.jpg','https://s3.amazonaws.com/leaguevideotest/pics5.jpg','https://s3.amazonaws.com/leaguevideotest/pics6.jpg']
         }
@@ -70,6 +80,8 @@ class Handler(BaseHTTPRequestHandler):
         res = requests.post('http://localhost:3000/predict', headers=headers, data=json.dumps(payload))
         #-------------------------------------
         return
+
+
 def run(server_class=HTTPServer, handler_class=Handler, port=8080):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
