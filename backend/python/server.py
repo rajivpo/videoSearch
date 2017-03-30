@@ -1,6 +1,7 @@
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import simplejson
 import SocketServer
+import boto3
 import requests
 import cgi
 import cgitb
@@ -11,75 +12,87 @@ import json
 from io import BytesIO
 import math
 import numpy as np
-import s3
-import yaml
 
-with open('s3.yaml', 'r') as fi:
-    config = yaml.load(fi)
-connection = s3.S3Connection(**config['s3'])
-storage = s3.Storage(connection)
+#import s3 configuration credentials
+execfile("./configuration.py")
+
+#configure s3 boto3 connection
+s3 = boto3.resource(
+    's3',
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+)
+
+#array to store urls
+arr1 = []
+
+
+#parse the video into frames then call save to aws on it
+def parseVideo(videoFile):
+    arr = []
+    print "parseVideo", videoFile
+    vidcap = cv2.VideoCapture(videoFile)
+    print 'here'
+    success,image = vidcap.read()
+    seconds = 10
+    counter = 1
+    fps = int(round(vidcap.get(cv2.CAP_PROP_FPS))) # Gets the frames per second
+    multiplier = fps * seconds
+    while success:
+        frameId = int(round(vidcap.get(1))) #current frame number, rounded b/c sometimes you get frame intervals which aren't integers...this adds a little imprecision but is likely good enough
+        print frameId, multiplier
+        success, image = vidcap.read()
+        if frameId % multiplier == 0:
+            filenameuploaded = 'pics'+str(counter)+'.jpg'
+            cv2.imwrite(filenameuploaded, image)
+            counter+=1
+            print 'saving created image:', filenameuploaded
+            arr.append(filenameuploaded)
+    vidcap.release()
+    print 'about to save the following pics:', arr
+    awsSave(arr) #HERE WE SAVE TO AWS
+
+#save to aws s3 and put urls into arr
+def awsSave(arr):
+    #maybe configure a bucket or folder for each user, right now all goes into one bucket
+    # s3.create_bucket(Bucket=bucket, CreateBucketConfiguration={
+    #     'LocationConstraint': 'us-west-1'})
+    bucket = 'mybucket-bennettmertz'
+    counter = 0
+    for val in arr:
+        print 'save attempt:', val
+        counter += 1
+        data = open(str(val), 'rb')
+        s3.Bucket(bucket).put_object(
+            Key='pics'+str(counter)+'.jpg',
+            Body=data,
+            ACL='public-read'
+        )
+        url = 'https://s3-us-west-1.amazonaws.com/'+str(bucket)+'/'+str(val)
+        arr1.append(url)
 
 class Handler(BaseHTTPRequestHandler):
-    def awsSave(filenameuploaded):
-        # #here we upload file to default url
-        # try:
-        #     storage.write("pics.jpg", filenameuploaded)
-        # except StorageError, e:
-        #     print 'failed:', e
-        print 'hi'
-    def parseVideo(videoFile):
-        #parse the video
-        vidcap = cv2.VideoCapture(videoFile)
-        success,image = vidcap.read()
-        seconds = 10
-        counter = 1
-        fps = int(round(vidcap.get(cv2.CAP_PROP_FPS))) # Gets the frames per second
-        multiplier = fps * seconds
-        while success:
-            frameId = int(round(vidcap.get(1))) #current frame number, rounded b/c sometimes you get frame intervals which aren't integers...this adds a little imprecision but is likely good enough
-            print frameId, multiplier
-            success, image = vidcap.read()
-            print 'hey'
-            if frameId % multiplier == 0:
-                filenameuploaded = 'pics'+str(counter)+'.jpg'
-                cv2.imwrite(filenameuploaded, image)
-                counter+=1
-                print 'saving created image'
-
-                #AWS STUFF TO SPECIFY FOR UNIQUE USER
-                #here we create a unique bucket for this upload
-                # my_bucket_name = 'picturefile'+videoFile
-                # storage.bucket_create(my_bucket_name)
-                # assert storage.bucket_exists(my_bucket_name)
-
-                #HERE WE SAVE TO AWS
-                # awsSave(filenameuploaded)
-                vidcap.release()
     def do_POST(self):
         print "in post method"
         cgitb.enable()
         content_len = int(self.headers.getheader('content-length', 0))
         post_body = self.rfile.read(content_len)
-        # videoFile = post_body[11:(len(post_body)-2)] #node passes python string like object containing the file
-        #jk i changed it so it only posts a string
+
+        videoFile = post_body[11:(len(post_body)-2)] #node passes python a string url (.mp4)
         videoFile = post_body #node passes python string like object containing the file
         print 'videoFile address', videoFile
-        # videoFile='https://media.w3.org/2010/05/sintel/trailer.mp4' #as long as link is mp4 it works
 
         #PARSING OF VIDEO
         parseVideo(videoFile)
+        print "Video Parsing Complete, sending data to node server"
 
-        print "Video Parsing Complete"
-        #-------------------------------------
         #POST BACK TO NODE SERVER THE LINKS FROM AWS
         payload = {
-            'source': ['https://s3.amazonaws.com/leaguevideotest/pics1.jpg','https://s3.amazonaws.com/leaguevideotest/pics2.jpg','https://s3.amazonaws.com/leaguevideotest/pics3.jpg','https://s3.amazonaws.com/leaguevideotest/pics4.jpg','https://s3.amazonaws.com/leaguevideotest/pics5.jpg','https://s3.amazonaws.com/leaguevideotest/pics6.jpg']
+            'source': arr1
         }
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         res = requests.post('http://localhost:3000/predict', headers=headers, data=json.dumps(payload))
-        #-------------------------------------
         return
-
 
 def run(server_class=HTTPServer, handler_class=Handler, port=8080):
     server_address = ('', port)
