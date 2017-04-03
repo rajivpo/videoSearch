@@ -75,6 +75,7 @@ router.post('/predict', function(req, res){
               } else{
                 console.log(gamedata)
                 console.log('Data was saved')
+                res.send('success : true') //???????????????maybe delete????????????
               }
             });
           }
@@ -86,8 +87,39 @@ router.post('/predict', function(req, res){
   })
 })
 
+router.post('/stream', function(req,res){
+  var source = 's'+req.body.url
+  console.log('source', source)
+  var options = {
+    // host: 'whatever the fuck heroku is called',
+    port: 8080,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': Buffer.byteLength(source)
+    }
+  };
+  var httpreq = http.request(options, function (response) {
+    response.setEncoding('utf8');
+    response.on('data', function (chunk) {
+      console.log("body: " + chunk);
+    }).on('error', function(err) {
+      res.send('error');
+    }).on('end', function() {
+      res.send('ok');
+    })
+  }).on('error', function(e){
+    console.log(e)
+  });
+  httpreq.write(source);
+  httpreq.end();
+  console.log('here')
+  res.redirect('/')
+})
+
 router.post('/uploadurl', function(req, res){
   // var source = req.body.url //this doesn't work yet
+  // var source = {"type": "uploadedvideo", "data": req.body.url}
   var source = req.body.url
   console.log('source',source)
   var options = {
@@ -113,7 +145,7 @@ router.post('/uploadurl', function(req, res){
   });
   httpreq.write(source);
   httpreq.end();
-  console.log('here')
+  console.log('here1')
   res.redirect('/')
 })
 

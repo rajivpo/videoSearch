@@ -14,7 +14,22 @@ class Main extends React.Component {
     this.state = {
       character: '',
       probability: 0,
+      url: 'https://www.w3schools.com/html/mov_bbb.mp4'
     }
+  }
+  stream(evt) {
+    evt.preventDefault();
+    var self = this
+    console.log('stream', self.state.url)
+    fetch('http://localhost:3000/stream',{
+      method: 'post',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        url: self.state.url
+      })
+    })
   }
   getResult(evt){
     evt.preventDefault();
@@ -29,11 +44,11 @@ class Main extends React.Component {
         character: responseJson.character,
         probability: responseJson.probability
       })
-  })
-  .catch(function(err){
-    console.log(err);
-  })
-}
+    })
+    .catch(function(err){
+      console.log(err);
+    })
+  }
   onFinish(){
     var self = this;
     fetch('http://localhost:3000/uploadurl',{
@@ -59,6 +74,10 @@ class Main extends React.Component {
       console.log(err);
     })
   }
+  update(evt){
+    console.log('update this.state.url to', evt.target.value)
+    this.setState({url:evt.target.value})
+  }
   render(){
     var gameInfo = '';
     if(this.state.character === 'Blitzcrank' && this.state.probability > 0){
@@ -68,6 +87,13 @@ class Main extends React.Component {
     }
     return(
       <div>
+        <h2>Submit a stream link below:</h2>
+        <form onSubmit={this.stream.bind(this)}>
+        <label>
+        URL: <input type="text" name="name" onChange={this.update.bind(this)} value={this.state.url} />
+        </label>
+        <input type="submit" value="Submit" />
+        </form>
         <div>
           <h1 style={{textAlign: 'center'}}>Play smarter. Carry harder.</h1>
           <p>League of Legends is a game of skill. Hitting skillshots makes for increased damage,
