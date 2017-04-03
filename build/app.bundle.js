@@ -24489,12 +24489,29 @@ var Main = function (_React$Component) {
     _this.getResult = _this.getResult.bind(_this);
     _this.state = {
       character: '',
-      probability: 0
+      probability: 0,
+      url: 'https://www.w3schools.com/html/mov_bbb.mp4'
     };
     return _this;
   }
 
   _createClass(Main, [{
+    key: 'stream',
+    value: function stream(evt) {
+      evt.preventDefault();
+      var self = this;
+      console.log('stream', self.state.url);
+      fetch('http://localhost:3000/stream', {
+        method: 'post',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          url: self.state.url
+        })
+      });
+    }
+  }, {
     key: 'getResult',
     value: function getResult(evt) {
       evt.preventDefault();
@@ -24539,6 +24556,12 @@ var Main = function (_React$Component) {
       });
     }
   }, {
+    key: 'update',
+    value: function update(evt) {
+      console.log('update this.state.url to', evt.target.value);
+      this.setState({ url: evt.target.value });
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _React$createElement;
@@ -24552,6 +24575,22 @@ var Main = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         null,
+        _react2.default.createElement(
+          'h2',
+          null,
+          'Submit a stream link below:'
+        ),
+        _react2.default.createElement(
+          'form',
+          { onSubmit: this.stream.bind(this) },
+          _react2.default.createElement(
+            'label',
+            null,
+            'URL: ',
+            _react2.default.createElement('input', { type: 'text', name: 'name', onChange: this.update.bind(this), value: this.state.url })
+          ),
+          _react2.default.createElement('input', { type: 'submit', value: 'Submit' })
+        ),
         _react2.default.createElement(
           'div',
           null,

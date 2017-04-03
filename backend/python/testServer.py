@@ -13,8 +13,9 @@ import time
 from skimage.measure import structural_similarity as ssim
 import cv2
 import boto3
-# from video import parseVideo, awsSave, arr1
-from stream import parseVideo, awsSave, arr1, sendNode
+from video import parseVideo, awsSave, arr1
+from stream import parseStream, awsSave, sendNode
+
 
 class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
@@ -26,15 +27,26 @@ class Handler(BaseHTTPRequestHandler):
         videoFile = post_body.decode("utf-8")
         print('videoFile address', videoFile)
 
-        #PARSING OF VIDEO
-        parseVideo(videoFile)
-        print ("Video Parsing Complete, sending data to node server")
-        #POST BACK TO NODE SERVER THE LINKS FROM AWS
-        payload = {
+        fileType = videoFile[0]
+        if fileType == 's':
+            print('upload type : stream')
+            videoFile = videoFile[1:len(videoFile)]
+            parseStream(videoFile)
+
+        if fileType == 'f':
+            print('upload type : file')
+            videoFile = videoFile[1:len(videoFile)]
+            print("videoFile:", videoFile)
+            parseVideo(videoFile)
+            print ("Video Parsing Complete, sending data to node server")
+            #POST BACK TO NODE SERVER THE LINKS FROM AWS
+            payload = {
             'source': arr1
-        }
-        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        res = requests.post('http://localhost:3000/predict', headers=headers, data=json.dumps(payload))
+            }
+            headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+            res = requests.post('http://localhost:3000/predict', headers=headers, data=json.dumps(payload))
+
+        #PARSING OF VIDEO
         return
 
 def run(server_class=HTTPServer, handler_class=Handler, port=8080):
