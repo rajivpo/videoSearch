@@ -1,4 +1,6 @@
 ####OLD VERSION OF PYTHON BACKEND######
+####Can't handle steams and can only handle uploaded videos######
+####Not modularized across files######
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import socketserver

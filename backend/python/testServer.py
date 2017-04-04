@@ -1,3 +1,5 @@
+#most current version of our server that can handle streams and uploaded videos
+
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import socketserver
 import requests
