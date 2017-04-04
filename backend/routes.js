@@ -120,7 +120,7 @@ router.post('/stream', function(req,res){
 router.post('/uploadurl', function(req, res){
   // var source = req.body.url //this doesn't work yet
   // var source = {"type": "uploadedvideo", "data": req.body.url}
-  var source = req.body.url
+  var source = 'f'+req.body.url
   console.log('source',source)
   var options = {
     // host: 'whatever the fuck heroku is called',
