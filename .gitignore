@@ -3,7 +3,11 @@ config.json
 env.sh
 npm-debug.log
 .DS_Store
-/build
 .bashrc
 s3.yaml
-build/
+configuration.py
+*.jpg
+*.whl
+server.py.bak
+__pycache__
+build/*
