@@ -11,12 +11,15 @@ import json
 from io import BytesIO
 import math
 import numpy as np
-import time
-from skimage.measure import structural_similarity as ssim
-import cv2
-import boto3
-from video import parseVideo, awsSave, arr1
-# from stream import parseVideo, awsSave, arr1, sendNode
+import s3
+import yaml
+import filename
+
+with open('s3.yaml', 'r') as fi:
+    config = yaml.load(fi)
+connection = s3.S3Connection(**config['s3'])
+storage = s3.Storage(connection)
+
 
 class Handler(BaseHTTPRequestHandler):
     def do_POST(self):

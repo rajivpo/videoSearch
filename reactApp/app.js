@@ -34,7 +34,6 @@ class Main extends React.Component {
   getResult(evt){
     evt.preventDefault();
     var self = this;
-    evt.preventDefault();
     fetch('http://localhost:3000/gameinfo')
     .then(function(response){
       return response.json()
@@ -108,7 +107,6 @@ class Main extends React.Component {
           signingUrl="/s3/sign"
           signingUrlMethod="GET"
           accept="video/*"
-          onFinish = {this.onFinish}
           signingUrlWithCredentials={ true }      // in case when need to pass authentication credentials via CORS
           uploadRequestHeaders={{ 'x-amz-acl': 'public-read' }}  // this is the default
           contentDisposition="auto"
