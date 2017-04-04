@@ -13,6 +13,7 @@ import math
 import numpy as np
 import s3
 import yaml
+import filename
 
 with open('s3.yaml', 'r') as fi:
     config = yaml.load(fi)

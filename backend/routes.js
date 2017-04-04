@@ -40,11 +40,9 @@ router.get('/gameinfo', function(req, res){
 
 //Steps 9-15
 router.post('/predict', function(req, res){
-  console.log('req.body.source', req.body.source)
   var allKeys = req.body.source;
   var predictions = [];
   var idx = 0
-
   var counter = 0;
   allKeys.forEach(function(item){
     clari.models.predict(Clarifai.GENERAL_MODEL, item).then(
@@ -53,13 +51,11 @@ router.post('/predict', function(req, res){
           console.log(counter, allKeys.length);
           predictions.push(response.outputs[0].data.concepts[0]);
           if (counter === allKeys.length){
-            console.log('predictions', predictions);
             var probability = 0;
             predictions.forEach(function(item){
               probability += item.value;
             })
             probability /= predictions.length;
-            console.log(probability);
             var character = 'an unidentifiable character';
             if(probability > .95){
               character = 'Blitzcrank';
@@ -72,7 +68,6 @@ router.post('/predict', function(req, res){
               if(err){
                 console.log('Error', err);
               } else{
-                console.log(gamedata)
                 console.log('Data was saved')
               }
             });
@@ -86,9 +81,7 @@ router.post('/predict', function(req, res){
 })
 
 router.post('/uploadurl', function(req, res){
-  // var source = req.body.url //this doesn't work yet
   var source = req.body.url
-  console.log('source',source)
   var options = {
     // host: 'whatever the fuck heroku is called',
     port: 8080,

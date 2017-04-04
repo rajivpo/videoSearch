@@ -19,7 +19,6 @@ class Main extends React.Component {
   getResult(evt){
     evt.preventDefault();
     var self = this;
-    evt.preventDefault();
     fetch('http://localhost:3000/gameinfo')
     .then(function(response){
       return response.json()
