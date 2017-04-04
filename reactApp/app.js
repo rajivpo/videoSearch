@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react'
-import styles from '../styles.css'
+import css from '../styles.css'
 import ReactDOM from 'react-dom'
 var ReactS3Uploader = require('react-s3-uploader');
 

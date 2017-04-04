@@ -1,3 +1,5 @@
+#use this file to parse apart a streamed video of indefinite length in order to get updated feedback while parsing continues
+
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import socketserver
 import requests
