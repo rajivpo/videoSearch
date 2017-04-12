@@ -1,4 +1,3 @@
-
 var express = require('express');
 var app = express();
 var router = express.Router();
@@ -12,24 +11,25 @@ var mongoose = require('mongoose')
 var models = require('../models/models.js')
 var Game = models.Game;
 var Clarifai = require('clarifai');
-
+var response = require('response')
+var querystring = require('querystring');
+var request = require('request')
 
 var s3 = new aws.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 
-// var clari = new Clarifai.App(
-//   process.env.id,
-//   process.env.password
-// );
-// clari.getToken();
+var clari = new Clarifai.App(
+  process.env.id,
+  process.env.password
+);
+clari.getToken();
 
 router.get('/', function(req,res){
   res.sendFile(path.join(__dirname, '../index.html'))
 });
 
-//Steps 17,18, 19
 router.get('/gameinfo', function(req, res){
   Game.find(function(err, data){
     if(err){
@@ -40,7 +40,6 @@ router.get('/gameinfo', function(req, res){
   })
 })
 
-//Steps 9-15
 router.post('/predict', function(req, res){
   var allKeys = req.body.source;
   var predictions = [];
@@ -86,31 +85,51 @@ router.post('/predict', function(req, res){
 router.post('/stream', function(req,res){
   var source = 's'+req.body.url
   console.log('source', source)
+  // var options = {
+  //   host: 'whatever the heroku is called',
+  //   port: 8080,
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/x-www-form-urlencoded',
+  //     'Content-Length': Buffer.byteLength(source)
+  //   }
+  // };
+  // var httpreq = http.request(options, function (response) {
+  //   response.setEncoding('utf8');
+  //   response.on('data', function (chunk) {
+  //     console.log("body: " + chunk);
+  //   }).on('error', function(err) {
+  //     res.send('error');
+  //   }).on('end', function() {
+  //     res.send('ok');
+  //   })
+  // }).on('error', function(e){
+  //   console.log(e)
+  // });
+  // httpreq.write(source);
+  // httpreq.end();
+  // console.log('here')
+  // res.redirect('/')
+  var postData = querystring.stringify({
+    "source" : source
+  });
   var options = {
-    // host: 'whatever the fuck heroku is called',
-    port: 8080,
-    method: 'POST',
+    // url: 'https://aqueous-retreat-25940.herokuapp.com/classify',
+    form: source,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'Content-Length': Buffer.byteLength(source)
     }
   };
-  var httpreq = http.request(options, function (response) {
-    response.setEncoding('utf8');
-    response.on('data', function (chunk) {
-      console.log("body: " + chunk);
-    }).on('error', function(err) {
-      res.send('error');
-    }).on('end', function() {
-      res.send('ok');
-    })
-  }).on('error', function(e){
-    console.log(e)
-  });
-  httpreq.write(source);
-  httpreq.end();
-  console.log('here')
-  res.redirect('/')
+  request.post(options, function(e,r,body){
+    if(e) {
+      console.log(e);
+    } else if (r) {
+      console.log(r);
+    } else {
+      console.log(body);
+    }
+  })
 })
 
 router.post('/uploadurl', function(req, res){
