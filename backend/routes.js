@@ -1,5 +1,6 @@
 
 var express = require('express');
+var app = express();
 var router = express.Router();
 var path = require('path');
 var bodyParser = require('body-parser')
@@ -12,11 +13,11 @@ var models = require('../models/models.js')
 var Game = models.Game;
 var Clarifai = require('clarifai');
 
-aws.config.loadFromPath('./backend/config.json')
-var s3 = new aws.S3()
 
-var app = express();
-
+var s3 = new aws.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+});
 
 // var clari = new Clarifai.App(
 //   process.env.id,
