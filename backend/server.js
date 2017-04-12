@@ -15,6 +15,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
 app.use('/', routes);
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
+var server = app.listen(process.env.PORT || 3000, function () {
+  console.log('App running on heroku!')
 })
