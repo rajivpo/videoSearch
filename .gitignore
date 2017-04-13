@@ -10,5 +10,4 @@ configuration.py
 *.whl
 server.py.bak
 __pycache__
-components/
-build/
+build/*
