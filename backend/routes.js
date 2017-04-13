@@ -115,10 +115,10 @@ router.post('/stream', function(req,res){
   });
   var options = {
     url: 'https://secret-shore-54651.herokuapp.com/parse',
-    form: source,
+    form: postData,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': Buffer.byteLength(source)
+      'Content-Length': Buffer.byteLength(postData)
     }
   };
   request.post(options, function(e,r,body){
@@ -142,10 +142,10 @@ router.post('/uploadurl', function(req, res){
   });
   var options = {
     url: 'https://secret-shore-54651.herokuapp.com/parse',
-    form: source,
+    form: postData,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': Buffer.byteLength(source)
+      'Content-Length': Buffer.byteLength(postData)
     }
   };
   request.post(options, function(e,r,body){
