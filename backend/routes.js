@@ -84,7 +84,7 @@ router.post('/predict', function(req, res){
 
 router.post('/stream', function(req,res){
   var source = 's'+req.body.url
-  console.log('source', source)
+  console.log('stream source', source)
   // var options = {
   //   host: 'whatever the heroku is called',
   //   port: 8080,
@@ -136,7 +136,7 @@ router.post('/uploadurl', function(req, res){
   // var source = req.body.url //this doesn't work yet
   // var source = {"type": "uploadedvideo", "data": req.body.url}
   var source = 'f'+req.body.url
-  console.log('source',source)
+  console.log('uploadurl source',source)
   var postData = querystring.stringify({
     "source" : source
   });
