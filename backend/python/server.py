@@ -20,7 +20,7 @@ with open('s3.yaml', 'r') as fi:
 connection = s3.S3Connection(**config['s3'])
 storage = s3.Storage(connection)
 
-
+#
 class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         print ("in post method")
