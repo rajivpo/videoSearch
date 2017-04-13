@@ -24237,8 +24237,7 @@ var Main = function (_React$Component) {
       evt.preventDefault();
       var self = this;
       console.log('stream', self.state.url);
-      // fetch('http://localhost:3000/stream',{
-      fetch('https://guarded-caverns-22086.herokuapp.com/stream', {
+      fetch('http://localhost:3000/stream', {
         method: 'post',
         headers: {
           "Content-Type": "application/json"
@@ -24253,8 +24252,7 @@ var Main = function (_React$Component) {
     value: function getResult(evt) {
       evt.preventDefault();
       var self = this;
-      // fetch('http://localhost:3000/gameinfo')
-      fetch('https://guarded-caverns-22086.herokuapp.com/gameinfo').then(function (response) {
+      fetch('http://localhost:3000/gameinfo').then(function (response) {
         return response.json();
       }).then(function (responseJson) {
         self.setState({
@@ -24269,8 +24267,7 @@ var Main = function (_React$Component) {
     key: 'onFinish',
     value: function onFinish() {
       var self = this;
-      // fetch('http://localhost:3000/uploadurl',{
-      fetch('https://guarded-caverns-22086.herokuapp.com/uploadurl', {
+      fetch('http://localhost:3000/uploadurl', {
         method: 'post',
         headers: {
           "Content-Type": "application/json"
@@ -24362,7 +24359,7 @@ var Main = function (_React$Component) {
             scrubFilename: function scrubFilename(filename) {
               return filename.replace(/[^\w\d_\-\.]+/ig, '');
             },
-            server: 'https://guarded-caverns-22086.herokuapp.com' })
+            server: 'http://localhost:3000' })
         ),
         _react2.default.createElement(
           'div',
