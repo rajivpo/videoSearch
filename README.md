@@ -12,10 +12,11 @@ To use, must use python 3 (may need to source the correct pip modules for python
         - export AWS_SECRET_ACCESS_KEY="xxxxxxxxxxxx"  //aws s3 account secret access key
         - export id='xxxxxxxxxxxxxxxxxxxxxxx'  //clarifai id
         - export password='xxxxxxxxxxxxxxxxxxx'  //clarifai password
+    - source env.sh
     - npm install
     - npm run webpack
     - npm start
 - in a separate terminal cd into backend/python and type the following commands:
-    - pip install 
+    - pip install all dependencies (pip install http, socketserver, requests, cgi, cgitb, io, pycurl, json, io, math, numpy, time, skimage, cv2, boto3) - for windows, you may need to use the following website to download usable binaries (http://www.lfd.uci.edu/~gohlke/pythonlibs/)
     - python testServery.py
 - open localhost:3000 and use the whatever functionality you like
