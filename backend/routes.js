@@ -186,7 +186,7 @@ router.post('/uploadurl', function(req, res){
 })
 
 router.use('/s3', require('react-s3-uploader/s3router')({
-    bucket: "code-testing",
+    bucket: "mybucket-bennettmertz",
     region: 'us-west-1', //optional
     // signatureVersion: 'v4', //optional (use for some amazon regions: frankfurt and others)
     // headers: {'Access-Control-Allow-Origin': '*'}, // optional
