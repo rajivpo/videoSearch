@@ -137,35 +137,56 @@ router.post('/uploadurl', function(req, res){
   // var source = {"type": "uploadedvideo", "data": req.body.url}
   var source = 'f'+req.body.url
   console.log('source',source)
+  var postData = querystring.stringify({
+    "source" : source
+  });
   var options = {
-    // host: 'whatever the fuck heroku is called',
-    port: 8080,
-    method: 'POST',
+    url: 'https://secret-shore-54651.herokuapp.com/parse',
+    form: source,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'Content-Length': Buffer.byteLength(source)
     }
   };
-  var httpreq = http.request(options, function (response) {
-    response.setEncoding('utf8');
-    response.on('data', function (chunk) {
-      console.log("body: " + chunk);
-    }).on('error', function(err) {
-      res.send('error');
-    }).on('end', function() {
-      res.send('ok');
-    })
-  }).on('error', function(e){
-    console.log(e)
-  });
-  httpreq.write(source);
-  httpreq.end();
-  console.log('here1')
-  res.redirect('/')
+  request.post(options, function(e,r,body){
+    if(e) {
+      console.log(e);
+    } else if (r) {
+      console.log(r);
+    } else {
+      console.log(body);
+    }
+  })
+  //
+  //
+  // var options = {
+  //   host: 'https://secret-shore-54651.herokuapp.com/parse',
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/x-www-form-urlencoded',
+  //     'Content-Length': Buffer.byteLength(source)
+  //   }
+  // };
+  // var httpreq = http.request(options, function (response) {
+  //   response.setEncoding('utf8');
+  //   response.on('data', function (chunk) {
+  //     console.log("body: " + chunk);
+  //   }).on('error', function(err) {
+  //     res.send('error');
+  //   }).on('end', function() {
+  //     res.send('ok');
+  //   })
+  // }).on('error', function(e){
+  //   console.log(e)
+  // });
+  // httpreq.write(source);
+  // httpreq.end();
+  // console.log('here1')
+  // res.redirect('/')
 })
 
 router.use('/s3', require('react-s3-uploader/s3router')({
-    bucket: "videosearch-assets",
+    bucket: "mybucket-bennettmertz",
     region: 'us-west-1', //optional
     signatureVersion: 'v4', //optional (use for some amazon regions: frankfurt and others)
     headers: {'Access-Control-Allow-Origin': '*'}, // optional
