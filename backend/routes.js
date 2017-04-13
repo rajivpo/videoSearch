@@ -190,7 +190,7 @@ router.use('/s3', require('react-s3-uploader/s3router')({
     // region: 'us-west-1', //optional
     // signatureVersion: 'v4', //optional (use for some amazon regions: frankfurt and others)
     headers: {'Access-Control-Allow-Origin': '*'}, // optional
-    ACL: 'private'
+    ACL: 'public-read'
   })
 );
 
